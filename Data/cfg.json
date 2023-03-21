@@ -1,0 +1,23 @@
+{
+    "arc_nb_base_hu": 40,
+    "arc_nb_layers": 1,
+    "arc_wg_conn": 1,
+    "lr": 0.01,
+    "patience": 100,
+    "loss_sum_pow": 1,
+    "mode_sgl_backprop": false,
+    "show_cand_plot": false,
+    "evaluate_training": false,
+    "nb_cpus": 8,
+    "nb_runs": 4,
+    "train_epochs": 10000,
+    "test_epochs": 20,
+    "batch_size_REG": 8000,
+    "batch_size_MMD": 500,
+    "train_sample_size": 32000,
+    "valid_sample_size": 16000,
+    "test_sample_size": 16000,
+    "calib_sample_size": 32000,
+    "gen_sample_size": 20000,
+    "dim_q": 3
+}
