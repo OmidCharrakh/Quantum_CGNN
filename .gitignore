@@ -1,5 +1,11 @@
 .DS_Store
 
+Results/ccm
+Results/icm
+Results/qcm
+Results/scc
+Results/hu_optimization
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -122,3 +128,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+Results/hu_optimization/performance/c0_r2_57.csv
