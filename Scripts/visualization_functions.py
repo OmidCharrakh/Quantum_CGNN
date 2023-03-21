@@ -6,9 +6,10 @@ import pandas as pd
 import networkx as nx
 import utilities_functions as uFun
 import distance_functions as dFun
-#import cdt
-#cdt.SETTINGS.rpath="/Library/Frameworks/R.framework/Versions/4.0/Resources/Rscript"
-#from cdt.causality.graph import (PC,GES,MMPC,IAMB,GS,LiNGAM,)
+import fcit
+# import cdt
+# cdt.SETTINGS.rpath="/Library/Frameworks/R.framework/Versions/4.0/Resources/Rscript"
+# from cdt.causality.graph import (PC,GES,MMPC,IAMB,GS,LiNGAM,)
 sns.set()
 
 latex_dict = {
@@ -113,17 +114,18 @@ def plot_progress(df, cr_names, axes):
         ax.plot(range(len(df)), data, ls='-', marker='*', ms=1, label=cr_name, c=colors[k])
         ax.axhline(1, c='black')
         ax.axhline(10, c='black')
-        if len(data[data <= limitUpp]) >= np.floor(len(data)/2): 
+        if len(data[data <= limitUpp]) >= np.floor(len(data)/2):
             ax.set_ylim(0, limitUpp)
         ax.set_xticks([])
         ax.set_yticks([])
+
 
 '''
 def plot_progress(df_loss, saving_path):
     n_epochs = df_loss.shape[0]
     cr_names = df_loss.columns.tolist()
     loss_values = df_loss.values
-    
+
     x_range = list(range(n_epochs))
     max_plot_crit = 8
     valBnchmrk = 10
@@ -143,7 +145,6 @@ def plot_progress(df_loss, saving_path):
         axes[row, col].plot(x_range, data, ls='-', marker='.', ms=10, label=cr_name, c=colors[k])
         axes[row, col].axhline(1, c='black')
         axes[row, col].axhline(valBnchmrk, c='black')
-        
         if not cr_name == 'EDF_Mrg':
             if len(data[data <= limitUpp]) >= np.floor(len(data)/2):  # check if at least half of the data is displayed in y-Range
                 axes[row, col].set_ylim(0, limitUpp)
@@ -157,6 +158,7 @@ def plot_progress(df_loss, saving_path):
     plt.show()
     plt.close()
 '''
+
 
 def plot_marginals(data, saving_path=None):
     # [CONFIG]
@@ -172,8 +174,8 @@ def plot_marginals(data, saving_path=None):
             data=data,
             x=labels[i],
             stat='density',
-            kde=True, 
-            bins=20, 
+            kde=True,
+            bins=20,
             line_kws=dict(linewidth=1),
             ax=ax,
             )
@@ -277,6 +279,7 @@ def plot_citests(data, saving_path=None, cv_grid=None, num_perm=50):
     plt.show()
     plt.close()
 
+
 def plot_indep_tests(data, test_type=2, ax=None, num_perm=50, label='orig', marker='*', color='#008001', s=200):
     pval_dict = uFun.perform_independence_test(
         data=data, test_type=test_type, num_perm=num_perm, cv_grid=None)
@@ -285,7 +288,7 @@ def plot_indep_tests(data, test_type=2, ax=None, num_perm=50, label='orig', mark
         ax.set_xticks(np.arange(len(pval_dict)), pval_dict.keys(), rotation=20, fontsize=12)
     for k, pval in enumerate(pval_dict.values()):
         ax.scatter(
-            k, pval, c=color, marker=marker, s=s, 
+            k, pval, c=color, marker=marker, s=s,
             label=label if k==0 else None)
     return pval_dict
 
@@ -350,7 +353,7 @@ def _visualize_adjacency(A, ax, for_cgnn):
         )
 
 
-def visualize_adjacency(As, for_cgnn=True, figsize_single=(3,3), ax=None, saving_path=None):
+def visualize_adjacency(As, for_cgnn=True, figsize_single=(3, 3), ax=None, saving_path=None):
     if not isinstance(As, list):
         As = [As]
     n_graphs = len(As)
@@ -479,20 +482,20 @@ def plot_loss_portions(df_loss, ax):
     sns.set_style("darkgrid")
 
 def plot_candidate_losses(df, candidates_list, comparison_strings_list, colors_list, show_errors=True, saving_path=None):
-    
-    df = df.loc[candidates_list,:].copy()
+
+    df = df.loc[candidates_list, :].copy()
     x = np.arange(len(candidates_list))
     width = 0.2
     shift_counter = 0
-    fig, ax = plt.subplots(1, 1, figsize=(10,3), tight_layout=True)
-    
+    fig, ax = plt.subplots(1, 1, figsize=(10, 3), tight_layout=True)
+
     for index_string, string in enumerate(comparison_strings_list):
         ax.bar(
-            x=x+width*shift_counter, 
-            height=df[f'avg_{string}'], 
+            x=x+width*shift_counter,
+            height=df[f'avg_{string}'],
             yerr=df[f'std_{string}'] if show_errors else None,
             width=width,
-            color=colors_list[index_string], 
+            color=colors_list[index_string],
             label=latex_dict[string],
         )
         shift_counter = shift_counter+1
@@ -507,7 +510,8 @@ def plot_candidate_losses(df, candidates_list, comparison_strings_list, colors_l
         plt.savefig(saving_path, dpi=300, bbox_inches='tight')
     plt.show()
     plt.close()
-    
+
+
 def plot_stacked_loess(df, candidates_list, cr_names, saving_path=None):
     df = df.copy().loc[candidates_list, cr_names]
     x = np.arange(len(candidates_list))
@@ -534,6 +538,7 @@ def plot_stacked_loess(df, candidates_list, cr_names, saving_path=None):
     plt.show()
     plt.close()
 
+
 '''
 def plot_stacked_loess(df, cand_names, cand_labels, cr_names, weight_cr, saving_path):
     wg_dict_all = {'MMD_cdt': 1.0, 'MMD_Fr': 4.90, 'CorrD': 23.75, 'BinnedD': 10.89, 'CorrD_N': 2.15, 'NpMom': 1.03, 'CndD': 6.85, 'EDF_Mrg': 4.28}
@@ -553,7 +558,7 @@ def plot_stacked_loess(df, cand_names, cand_labels, cr_names, weight_cr, saving_
     df_te = pd.DataFrame(index=cr_names, columns=cand_names)
     for index_cand, cand in enumerate(cand_names):
         loss_mean = pd.read_csv(df.loc[index_cand, 'loss_te_link']).mean()
-        df_te[cand] = loss_mean*cr_weights 
+        df_te[cand] = loss_mean*cr_weights
     fig, ax = plt.subplots(figsize=(10, 3), tight_layout=True)
     width = 0.3
     for i, cr in enumerate(cr_names):
@@ -578,11 +583,11 @@ def plot_stacked_loess(df, cand_names, cand_labels, cr_names, weight_cr, saving_
 
 def visualize_separate_performances(
     df_sep_perfs,
-    cand_names, 
-    labels=None, 
+    cand_names,
+    labels=None,
     criteria_sets=['seen', 'unseen', 'mixed'],
-    show_errors=False, 
-    ax=None, 
+    show_errors=False,
+    ax=None,
     saving_path=None,
 ):
     df = df_sep_perfs.copy().set_index('cand_name').loc[cand_names].reset_index()
@@ -644,6 +649,7 @@ def visualize_separate_performances(
         plt.close()
 '''
 
+
 def plot_conditionals(data_true, data_pred, sampling_rate, corr_type, ax):
     legend_dict = {
         '01_23': f'$(O_A, O_B)|(S_A, S_B)$',
@@ -657,15 +663,15 @@ def plot_conditionals(data_true, data_pred, sampling_rate, corr_type, ax):
         '2_013': f'$S_A |(O_A, O_B, S_B)$',
         '3_012': f'$S_B |(O_A, O_B, S_A)$',
     }
-    
+
     distance_dict = uFun.decompose_conditionals(data_true, data_pred, sampling_rate, corr_type)
     distances = {}
     for k, v in distance_dict.items():
         if k in legend_dict.keys():
-            distances[legend_dict[k]]=v
+            distances[legend_dict[k]] = v
     ax.pie(
         x=list(distances.values()),
-        #colors=plt.rcParams['axes.prop_cycle'].by_key()['color'],
+        # colors=plt.rcParams['axes.prop_cycle'].by_key()['color'],
     )
     return distances
 
@@ -675,22 +681,22 @@ def visualize_marginal_distance(data, ax):
     cdt.SETTINGS.rpath="/Library/Frameworks/R.framework/Versions/4.0/Resources/Rscript"
     from cdt.independence.stats import (AdjMI, KendallTau, PearsonCorrelation, SpearmanCorrelation)
     measures = {
-        'Mutual Information': AdjMI(), 
-        'Kendall Tau': KendallTau(), 
-        'Pearson Correlation': PearsonCorrelation(), 
+        'Mutual Information': AdjMI(),
+        'Kendall Tau': KendallTau(),
+        'Pearson Correlation': PearsonCorrelation(),
         'Spearman Correlation': SpearmanCorrelation(),
     }
     metrics = list(measures.values())
     labels = list(measures.keys())
     colors = ['b', 'g', 'r', 'k', 'y']
-    #sns.color_palette("husl", len(measures)) 
-    
+    # sns.color_palette("husl", len(measures))
+
     meas_dict = uFun.measure_marginal_distance(data, metrics)
 
     for i, values in enumerate(meas_dict.values()):
         for j, value in enumerate(values):
             ax.scatter(
-                i, value, color=colors[j], label=labels[j] if i==0 else None,
+                i, value, color=colors[j], label=labels[j] if i == 0 else None,
             )
     return meas_dict
 
